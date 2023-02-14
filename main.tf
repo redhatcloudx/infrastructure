@@ -14,6 +14,7 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
+
   default_tags {
     tags = {
       Project     = "infrastructure"
@@ -21,6 +22,18 @@ provider "aws" {
       Owner       = "cloudx"
     }
   }
+}
+
+# Avoid a warning for providing a variable that is not used.
+variable "TFC_AWS_RUN_ROLE_ARN" {
+  type    = string
+  default = null
+}
+
+# Avoid a warning for providing a variable that is not used.
+variable "TFC_AWS_PROVIDER_AUTH" {
+  type    = bool
+  default = false
 }
 
 resource "aws_s3_bucket" "cloudx_json_bucket" {
