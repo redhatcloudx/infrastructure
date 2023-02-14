@@ -37,7 +37,7 @@ variable "TFC_AWS_PROVIDER_AUTH" {
 }
 
 resource "aws_s3_bucket" "cloudx_json_bucket" {
-  bucket = "cloudx-json-bucket-new"
+  bucket = "cloudx-json-bucket"
 }
 
 resource "aws_s3_bucket_acl" "example_bucket_acl" {
