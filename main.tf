@@ -20,6 +20,7 @@ provider "aws" {
       Project     = "infrastructure"
       Environment = "dev"
       Owner       = "cloudx"
+      Emoji       = "🚀"
     }
   }
 }
