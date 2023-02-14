@@ -4,6 +4,12 @@ terraform {
       source = "hashicorp/aws"
     }
   }
+  cloud {
+    organization = "major"
+    workspaces {
+      name = "infrastructure"
+    }
+  }
 }
 
 provider "aws" {
