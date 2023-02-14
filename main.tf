@@ -7,12 +7,12 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
   default_tags {
     tags = {
-      Project = "cloud-image-retriever"
+      Project     = "cloud-image-retriever"
       Environment = "dev"
-      Owner = "cloudx"
+      Owner       = "cloudx"
     }
   }
 }
