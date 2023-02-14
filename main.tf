@@ -23,6 +23,6 @@ provider "aws" {
   }
 }
 
-resource "aws_s3_bucket" "cloudx_testing" {
-  bucket = "cloudx-testing"
+resource "aws_s3_bucket" "cloudx_image_locator_json" {
+  bucket = "cloudx_image_locator_json"
 }
