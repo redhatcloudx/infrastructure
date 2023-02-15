@@ -57,3 +57,30 @@ data "aws_iam_policy_document" "github_cloud_image_retriever" {
     }
   }
 }
+
+data "aws_iam_policy_document" "get_image_data" {
+  statement {
+    sid    = "GetImageData"
+    effect = "Allow"
+
+    actions = [
+      "ec2:DescribeImages",
+      "ec2:DescribeRegions"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "get_image_data" {
+  name = "get_image_data"
+
+  policy = data.aws_iam_policy_document.get_image_data.json
+}
+
+resource "aws_iam_role" "github_actions_image_retriever" {
+  name = "github_actions_image_retriever"
+
+  managed_policy_arns = [aws_iam_policy.get_image_data.arn, aws_iam_policy.publish_image_data.arn]
+  assume_role_policy  = data.aws_iam_policy_document.github_cloud_image_retriever.json
+}
