@@ -1,26 +1,6 @@
 # Cloud items required for the retriever proof of concept.
 # https://github.com/redhatcloudx/cloud-image-retriever
 
-# Create a bucket for the JSON files.
-resource "aws_s3_bucket" "cloudx_json_bucket" {
-  bucket = "cloudx-json-bucket"
-}
-
-# Set the bucket to private. We expose this bucket later via CloudFront.
-resource "aws_s3_bucket_acl" "cloudx_json_bucket" {
-  bucket = aws_s3_bucket.cloudx_json_bucket.id
-  acl    = "private"
-}
-
-# Allow the bucket to host a website.
-resource "aws_s3_bucket_website_configuration" "cloudx_json_bucket" {
-  bucket = aws_s3_bucket.cloudx_json_bucket.bucket
-
-  index_document {
-    suffix = "index.json"
-  }
-}
-
 # IAM policy document for managing JSON content in the bucket.
 data "aws_iam_policy_document" "publish_image_data" {
   statement {
@@ -49,4 +29,31 @@ resource "aws_iam_policy" "publish_image_data" {
   name = "publish_data"
 
   policy = data.aws_iam_policy_document.publish_image_data.json
+}
+
+# IAM policy document that allows actions in the cloud-image-retriever repo to
+# assume the role.
+data "aws_iam_policy_document" "github_cloud_image_retriever" {
+  statement {
+    sid     = "GitHubActionsWebIdentityPolicy"
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
+    }
+
+    condition {
+      test     = "ForAnyValue:StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "ForAnyValue:StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:redhatcloudx/cloud-image-retriever:*"]
+    }
+  }
 }
