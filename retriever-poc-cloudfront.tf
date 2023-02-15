@@ -33,3 +33,77 @@ resource "aws_route53_record" "retriever_poc" {
   type            = each.value.type
   zone_id         = data.aws_route53_zone.imagedirectory_cloud.zone_id
 }
+
+# Set up the CloudFront distribution.
+resource "aws_cloudfront_distribution" "retriever_poc" {
+  origin {
+    domain_name = aws_s3_bucket_website_configuration.cloudx_testing.website_domain
+    origin_id = local.s3_origin_id
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  comment             = "Retriever proof of concept"
+  default_root_object = "index.json"
+
+  logging_config {
+    include_cookies = false
+    bucket          = aws_s3_bucket.cloudx_testing.website_domain
+    prefix          = "logs"
+  }
+
+  aliases = [local.imagedirectory_domain]
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.s3_origin_id
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PriceClass.html
+  price_class = "PriceClass_100"
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+      locations        = []
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.major_imagedirectory_cloud.arn
+    ssl_support_method = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
+}
+
+# Add a DNS record for the CloudFront distribution.
+resource "aws_route53_record" "major_testing" {
+  zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
+  name = local.imagedirectory_domain
+  type = "A"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  alias {
+    name = aws_cloudfront_distribution.retriever_poc.domain_name
+    zone_id = aws_cloudfront_distribution.retriever_poc.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
