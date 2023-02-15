@@ -49,7 +49,7 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
 
   logging_config {
     include_cookies = false
-    bucket          = aws_s3_bucket.cloudx_json_bucket.bucket
+    bucket          = aws_s3_bucket.cloudx_json_bucket.bucket_domain_name
     prefix          = "logs"
   }
 
