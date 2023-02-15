@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "publish_image_data" {
     ]
 
     resources = [
+      "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}",
       "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}/*"
     ]
   }
