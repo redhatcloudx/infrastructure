@@ -40,6 +40,19 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
   origin {
     domain_name = aws_s3_bucket_website_configuration.cloudx_json_bucket.website_endpoint
     origin_id   = local.s3_origin_id
+
+    # NOTE(mhayden): We need a custom origin config here so that Terraform
+    # doesn't explode when it tells CloudFront to use the website URL instead of
+    # the normal bucket URL. Using the website URL allows the default root/index
+    # functionality to work.
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "http-only"
+      origin_ssl_protocols     = ["TLSv1.2"]
+      origin_keepalive_timeout = 5
+      origin_read_timeout      = 30
+    }
   }
 
   enabled             = true
