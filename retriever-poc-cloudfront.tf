@@ -2,6 +2,7 @@
 # https://github.com/redhatcloudx/cloud-image-retriever
 
 locals {
+  s3_origin_id          = "retriever-poc"
   imagedirectory_domain = "poc.imagedirectory.cloud"
 }
 
@@ -37,8 +38,8 @@ resource "aws_route53_record" "retriever_poc" {
 # Set up the CloudFront distribution.
 resource "aws_cloudfront_distribution" "retriever_poc" {
   origin {
-    domain_name = aws_s3_bucket_website_configuration.cloudx_testing.website_domain
-    origin_id = local.s3_origin_id
+    domain_name = aws_s3_bucket_website_configuration.cloudx_json_bucket.website_domain
+    origin_id   = local.s3_origin_id
   }
 
   enabled             = true
@@ -48,7 +49,7 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
 
   logging_config {
     include_cookies = false
-    bucket          = aws_s3_bucket.cloudx_testing.website_domain
+    bucket          = aws_s3_bucket_website_configuration.cloudx_json_bucket.website_domain
     prefix          = "logs"
   }
 
@@ -85,8 +86,8 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.major_imagedirectory_cloud.arn
-    ssl_support_method = "sni-only"
+    acm_certificate_arn      = aws_acm_certificate.retriever_poc.arn
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
@@ -94,16 +95,16 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
 # Add a DNS record for the CloudFront distribution.
 resource "aws_route53_record" "major_testing" {
   zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
-  name = local.imagedirectory_domain
-  type = "A"
+  name    = local.imagedirectory_domain
+  type    = "A"
 
   lifecycle {
     create_before_destroy = true
   }
 
   alias {
-    name = aws_cloudfront_distribution.retriever_poc.domain_name
-    zone_id = aws_cloudfront_distribution.retriever_poc.hosted_zone_id
+    name                   = aws_cloudfront_distribution.retriever_poc.domain_name
+    zone_id                = aws_cloudfront_distribution.retriever_poc.hosted_zone_id
     evaluate_target_health = false
   }
 }
