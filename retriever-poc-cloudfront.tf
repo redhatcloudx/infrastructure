@@ -38,7 +38,7 @@ resource "aws_route53_record" "retriever_poc" {
 # Set up the CloudFront distribution.
 resource "aws_cloudfront_distribution" "retriever_poc" {
   origin {
-    domain_name = aws_s3_bucket.cloudx_json_bucket.bucket_domain_name
+    domain_name = aws_s3_bucket_website_configuration.cloudx_json_bucket.website_endpoint
     origin_id   = local.s3_origin_id
   }
 
