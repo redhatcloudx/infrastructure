@@ -58,7 +58,7 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
   enabled             = true
   is_ipv6_enabled     = true
   comment             = "Retriever proof of concept"
-  default_root_object = "index.json"
+  default_root_object = "index.html"
 
   logging_config {
     include_cookies = false
