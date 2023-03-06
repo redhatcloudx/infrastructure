@@ -3,7 +3,8 @@
 # the seperation of concerns is worth the slight code duplication.
 
 # Cloud items required for the transformer proof of concept.
-# https://github.com/redhatcloudx/cloud-image-transformer
+# The transformer is part of the Cloud Image Directory codebase.
+# https://github.com/redhatcloudx/cloud-image-directory
 
 # IAM policy document for managing JSON content in the bucket.
 data "aws_iam_policy_document" "transform_image_data" {
@@ -58,7 +59,7 @@ data "aws_iam_policy_document" "github_cloud_image_transformer" {
     condition {
       test     = "ForAnyValue:StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:redhatcloudx/cloud-image-transformer:*"]
+      values   = ["repo:redhatcloudx/cloud-image-directory:*"]
     }
   }
 }
