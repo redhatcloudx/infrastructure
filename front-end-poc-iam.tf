@@ -24,8 +24,8 @@ data "aws_iam_policy_document" "push_static_front_end" {
     ]
 
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}/web-app",
-      "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}/web-app/*"
+      "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}",
+      "arn:aws:s3:::${aws_s3_bucket.cloudx_json_bucket.bucket}/*"
     ]
   }
 }
