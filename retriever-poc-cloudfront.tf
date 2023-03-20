@@ -6,6 +6,12 @@ locals {
   imagedirectory_domain = "poc.imagedirectory.cloud"
 }
 
+# Set up an access identify for CloudFront. We use this in the S3 bucket policy so
+# CloudFront can read our private bucket content.
+resource "aws_cloudfront_origin_access_identity" "retriever_poc" {
+  comment = "Access identity for CF to access private S3 bucket ${aws_s3_bucket.cloudx_json_bucket.id}"
+}
+
 # Provision an automatically renewing certificate for the CloudFront
 # distribution.
 resource "aws_acm_certificate" "retriever_poc" {
@@ -40,6 +46,9 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
   origin {
     domain_name = aws_s3_bucket.cloudx_json_bucket.bucket_regional_domain_name
     origin_id   = local.s3_origin_id
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.retriever_poc.cloudfront_access_identity_path
+    }
 
     # NOTE(mhayden): We need a custom origin config here so that Terraform
     # doesn't explode when it tells CloudFront to use the website URL instead of
