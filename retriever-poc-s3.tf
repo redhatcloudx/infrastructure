@@ -27,6 +27,11 @@ data "aws_iam_policy_document" "read_cloudx_json_bucket" {
 # Create a bucket for the JSON files.
 resource "aws_s3_bucket" "cloudx_json_bucket" {
   bucket = "cloudx-json-bucket"
+}
+
+# Add CORS to the bucket.
+resource "aws_s3_bucket_cors_configuration" "cloudx_json_bucket" {
+  bucket = aws_s3_bucket.cloudx_json_bucket.id
 
   cors_rule {
     allowed_methods = ["GET"]
