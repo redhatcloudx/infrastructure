@@ -41,6 +41,11 @@ resource "aws_route53_record" "retriever_poc" {
   zone_id         = data.aws_route53_zone.imagedirectory_cloud.zone_id
 }
 
+# Look up the AWS SimpleCORS policy.
+data "aws_cloudfront_response_headers_policy" "simple_cors_policy" {
+  name = "Managed-SimpleCORS"
+}
+
 # Set up the CloudFront distribution.
 resource "aws_cloudfront_distribution" "retriever_poc" {
   origin {
@@ -76,6 +81,10 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
         forward = "none"
       }
     }
+
+    # Use the SimpleCORS policy from AWS that allows all origins to access the data.
+    # TODO(mhayden): We might want to adjust this later to something more limited.
+    response_headers_policy_id = data.aws_cloudfront_response_headers_policy.simple_cors_policy.id
 
     min_ttl                = 0
     default_ttl            = 86400
