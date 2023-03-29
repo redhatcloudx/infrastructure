@@ -141,4 +141,6 @@ resource "aws_route53_record" "imagedirectory_mail" {
   lifecycle {
     create_before_destroy = true
   }
+  
+  ttl = "3600"
 }
