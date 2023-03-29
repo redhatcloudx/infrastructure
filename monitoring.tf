@@ -125,3 +125,40 @@ resource "aws_iam_role" "monitor_frontend" {
   managed_policy_arns = [aws_iam_policy.monitor_frontend.arn]
   assume_role_policy  = data.aws_iam_policy_document.canary_bucket_trust_policy.json
 }
+
+# Create a CloudWatch alarm that will notify us if the canary fails.
+resource "aws_cloudwatch_metric_alarm" "monitor_frontend" {
+  alarm_name          = "frontent-canary-alarm"
+  comparison_operator = "LessThanThreshold"
+  datapoints_to_alarm = "1"
+  evaluation_periods  = "1"
+  metric_name         = "SuccessPercent"
+  namespace           = "CloudWatchSynthetics"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "90"
+  treat_missing_data  = "breaching"
+  dimensions = {
+    CanaryName = aws_synthetics_canary.monitor_frontend.name
+  }
+  alarm_description = "Canary alarm for CID frontend"
+  ok_actions        = [aws_sns_topic.monitor_frontend.arn]
+  alarm_actions     = [aws_sns_topic.monitor_frontend.arn]
+}
+
+# Create an SNS topic that we can use to send notifications.
+resource "aws_sns_topic" "monitor_frontend" {
+  name = "monitor_frontend"
+}
+
+# Blast Major's inbox if something goes wrong
+# TODO(major): Change this to a mailing list once we know it works.
+resource "aws_sns_topic_subscription" "major_testing" {
+  topic_arn = aws_sns_topic.monitor_frontend.arn
+  protocol  = "email"
+  endpoint  = "major@redhat.com"
+
+  depends_on = [
+    aws_sns_topic.monitor_frontend
+  ]
+}
