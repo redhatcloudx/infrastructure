@@ -22,7 +22,7 @@ resource "aws_synthetics_canary" "monitor_frontend" {
   zip_file = "canary-scripts/canary.zip"
 
   schedule {
-    expression = "rate(5 minute)"
+    expression = "rate(5 minutes)"
   }
 }
 
