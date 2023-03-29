@@ -111,7 +111,7 @@ resource "aws_cloudfront_distribution" "retriever_poc" {
 }
 
 # Add a DNS record for the CloudFront distribution.
-resource "aws_route53_record" "major_testing" {
+resource "aws_route53_record" "imagedirectory_frontend" {
   zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
   name    = local.imagedirectory_domain
   type    = "A"
