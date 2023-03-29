@@ -3,7 +3,7 @@
 
 locals {
   s3_origin_id          = "retriever-poc"
-  imagedirectory_domain = "poc.imagedirectory.cloud"
+  imagedirectory_domain = "imagedirectory.cloud"
 }
 
 # Set up an access identify for CloudFront. We use this in the S3 bucket policy so
