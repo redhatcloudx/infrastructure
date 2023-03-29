@@ -162,3 +162,20 @@ resource "aws_sns_topic_subscription" "major_testing" {
     aws_sns_topic.monitor_frontend
   ]
 }
+
+# DNS records for upptime monitoring on GitHub Pages.
+resource "aws_route53_record" "github_pages_upptime" {
+  zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
+  name    = "status"
+  type    = "CNAME"
+
+  records = [
+    "redhatcloudx.github.io",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  ttl = "3600"
+}
