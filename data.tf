@@ -5,3 +5,6 @@
 data "aws_route53_zone" "imagedirectory_cloud" {
   name = "imagedirectory.cloud"
 }
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
