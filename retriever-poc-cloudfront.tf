@@ -126,3 +126,19 @@ resource "aws_route53_record" "major_testing" {
     evaluate_target_health = false
   }
 }
+
+# DNS records for email forwarding.
+resource "aws_route53_record" "imagedirectory_mail" {
+  zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
+  name    = local.imagedirectory_domain
+  type    = "MX"
+
+  records = [
+    "10 fwd1.porkbun.com",
+    "20 fwd2.porkbun.com",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
