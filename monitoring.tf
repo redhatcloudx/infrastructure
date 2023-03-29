@@ -128,7 +128,7 @@ resource "aws_iam_role" "monitor_frontend" {
 
 # Create a CloudWatch alarm that will notify us if the canary fails.
 resource "aws_cloudwatch_metric_alarm" "monitor_frontend" {
-  alarm_name          = "frontent-canary-alarm"
+  alarm_name          = "frontend-canary-alarm"
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = "1"
   evaluation_periods  = "1"
