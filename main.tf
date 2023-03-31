@@ -17,9 +17,12 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "infrastructure"
-      Environment = "dev"
-      Owner       = "cloudx"
+      # We will need a real Red Hat appcode later, but this should be okay for now. 😉
+      AppCode      = "CID"
+      Project      = "cloud-image-directory"
+      ServiceName  = "cloud-image-directory"
+      ServicePhase = "experimental"
+      ServiceOwner = "cloudx"
     }
   }
 }
