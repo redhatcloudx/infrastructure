@@ -8,6 +8,7 @@ data "aws_iam_policy_document" "publish_image_data" {
     effect = "Allow"
 
     actions = [
+      "s3:DeleteObject",
       "s3:DeleteObjectTagging",
       "s3:PutObject",
       "s3:GetObject",
