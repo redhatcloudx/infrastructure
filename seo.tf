@@ -5,7 +5,7 @@ resource "aws_route53_record" "google_webmaster_tools_verification" {
   type    = "TXT"
 
   records = [
-    "google-site-verification=GhRM6zenYo0UAlisdemk7u_J_j_J4ue8wBNwdzmmUdw",
+    "google-site-verification=TFyddpFgC1auolmDtAWAjXfj6THpP4w9aQv2uD5EAjI",
   ]
 
   ttl = "3600"
