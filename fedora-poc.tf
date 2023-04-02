@@ -13,3 +13,20 @@ resource "aws_route53_record" "fedora_poc_github_verify" {
 
   ttl = "3600"
 }
+
+# DNS record for the GitHub Pages site.
+resource "aws_route53_record" "github_pages_upptime" {
+  zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
+  name    = "fedora"
+  type    = "CNAME"
+
+  records = [
+    "redhatcloudx.github.io",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  ttl = "3600"
+}
