@@ -15,7 +15,7 @@ resource "aws_route53_record" "fedora_poc_github_verify" {
 }
 
 # DNS record for the GitHub Pages site.
-resource "aws_route53_record" "github_pages_upptime" {
+resource "aws_route53_record" "fedora_poc_github_pages" {
   zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
   name    = "fedora"
   type    = "CNAME"
