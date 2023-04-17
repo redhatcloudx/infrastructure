@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "read_cid_bucket_staging" {
 
 # Create a bucket for the JSON files.
 resource "aws_s3_bucket" "cid_bucket_staging" {
-  bucket = "cloudx-json-bucket"
+  bucket = "cid-bucket-staging"
 }
 
 # Add CORS to the bucket.
