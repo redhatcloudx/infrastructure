@@ -1,6 +1,6 @@
 # CloudFront confuguration required for the staging environment
 locals {
-  s3_origin_id_staging          = "cid-staging"
+  s3_origin_id_staging = "cid-staging"
 }
 
 # Set up an access identify for CloudFront. We use this in the S3 bucket policy so
@@ -37,7 +37,7 @@ resource "aws_cloudfront_distribution" "cid_staging" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "CDN for CID staging environment."
+  comment             = "CID Staging"
   default_root_object = "index.html"
 
   logging_config {
@@ -90,8 +90,8 @@ resource "aws_cloudfront_distribution" "cid_staging" {
 
   custom_error_response {
     error_caching_min_ttl = 300
-    error_code = 404
-    response_code = 200
-    response_page_path = "/index.html"
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
   }
 }
