@@ -29,7 +29,7 @@ data "aws_cloudfront_response_headers_policy" "simple_cors_policy_staging" {
 resource "aws_cloudfront_distribution" "cid_staging" {
   origin {
     domain_name = aws_s3_bucket.cid_bucket_staging.bucket_regional_domain_name
-    origin_id   = local.s3_origin_id
+    origin_id   = local.s3_origin_id_staging
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.cid_staging.cloudfront_access_identity_path
     }
