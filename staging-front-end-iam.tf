@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "push_static_front_end_staging" {
 
 # Load the IAM policy document into a policy that we can use with a role.
 resource "aws_iam_policy" "push_static_front_end_staging" {
-  name = "push_static_files"
+  name = "push_static_files_to_staging"
 
   policy = data.aws_iam_policy_document.push_static_front_end_staging.json
 }
