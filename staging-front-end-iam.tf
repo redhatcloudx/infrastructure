@@ -2,8 +2,8 @@
 # Even though permissions and roles are near identical,
 # the seperation of concerns is worth the slight code duplication.
 
-# IAM policy document for managing static website content in the bucket.
-data "aws_iam_policy_document" "push_static_front_end_staging" {
+# IAM policy document for managing static content in the bucket.
+data "aws_iam_policy_document" "push_to_staging" {
   statement {
     sid    = "PushStaticFrontEnd"
     effect = "Allow"
@@ -27,15 +27,15 @@ data "aws_iam_policy_document" "push_static_front_end_staging" {
 }
 
 # Load the IAM policy document into a policy that we can use with a role.
-resource "aws_iam_policy" "push_static_front_end_staging" {
+resource "aws_iam_policy" "push_to_staging" {
   name = "push_static_files_to_staging"
 
-  policy = data.aws_iam_policy_document.push_static_front_end_staging.json
+  policy = data.aws_iam_policy_document.push_to_staging.json
 }
 
-# IAM policy document that allows actions in the cloud-image-frontend repo to
+# IAM policy document that allows actions in the cloud-image-* repos to
 # assume the role.
-data "aws_iam_policy_document" "github_cloud_image_directory_frontend_staging" {
+data "aws_iam_policy_document" "github_cloud_image_directory_staging" {
   statement {
     sid     = "GitHubActionsWebIdentityPolicy"
     effect  = "Allow"
@@ -55,14 +55,18 @@ data "aws_iam_policy_document" "github_cloud_image_directory_frontend_staging" {
     condition {
       test     = "ForAnyValue:StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:redhatcloudx/cloud-image-directory-frontend:*"]
+      values = ["repo:redhatcloudx/cloud-image-directory-frontend:*",
+        "repo:redhatcloudx/cloud-image-retriever:*",
+        "repo:redhatcloudx/transformer:*"
+      ]
     }
   }
 }
 
-resource "aws_iam_role" "github_actions_cloud_image_directory_frontend_staging" {
-  name = "github_actions_cloud_image_directory_frontend_staging"
+resource "aws_iam_role" "github_actions_cloud_image_directory_staging" {
+  name = "github_actions_cloud_image_directory_staging"
 
-  managed_policy_arns = [aws_iam_policy.push_static_front_end_staging.arn]
-  assume_role_policy  = data.aws_iam_policy_document.github_cloud_image_directory_frontend_staging.json
+  managed_policy_arns = [aws_iam_policy.push_to_staging.arn]
+  assume_role_policy  = data.aws_iam_policy_document.github_cloud_image_directory_staging.json
 }
+
