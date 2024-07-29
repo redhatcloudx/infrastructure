@@ -1,6 +1,6 @@
 # CNAME for custom domain for expirimental fly.io deployment.
 # https://fly.io/docs/networking/custom-domain/
-resource "aws_route53_record" "fly_experimental_api" {
+resource "aws_route53_record" "experimental_api" {
   zone_id = data.aws_route53_zone.imagedirectory_cloud.zone_id
   name    = "api"
   type    = "CNAME"
